@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <link rel="stylesheet" href="css/index.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@dition0221's Casino</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome to @dition0221's Casino Game World !</h1>
+    </header>
+    <main>
+        <form action="">
+            <div class="black-jack">
+                <table class="black-jack__table">
+                    <thead>
+                        <tr class="black-jack__count">
+                            <th>&lt;Name&gt;</th>
+                            <th>1st</th>
+                            <th>2nd</th>
+                            <th>3rd</th>
+                            <th>4th</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="black-jack__dealer">
+                            <th>Dealer</th>
+                        </tr>
+                        <tr class="black-jack__player">
+                            <th>Player</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="black-jack__sum">
+                    <thead>
+                        <tr>
+                            <th>합계</th>
+                        </tr>
+                    </thead>
+                    <tbody class="black-jack__sum-result">
+                        <tr>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <button id="black-jack__play-button">Play !</button>
+                <button id="black-jack__hit-button" disabled>Hit !</button>
+                <input id="black-jack__reset-button" type="submit" value="Reset" disabled>
+            </div>
+        </form>
+    </main>
+    <footer>
+        <span>본 페이지는 공부연습용 입니다.</span>
+    </footer>
+    <script src="js/black-jack.js"></script>
+</body>
+</html>
