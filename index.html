@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"> -->
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <h1>Welcome to Javascript Casino Game World !</h1>
+        <h1 class="title">Welcome to Javascript Casino Game World !</h1>
     </header>
     <main>
         <form action="">
@@ -52,7 +52,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="black-jack__button">
+            <div class="black-jack__buttons">
                 <button id="black-jack__play-button">Play !</button>
                 <button id="black-jack__hit-button" disabled>Hit !</button>
                 <button id="black-jack__stay-button" disabled>Stay !</button>
@@ -61,8 +61,10 @@
         </form>
     </main>
     <footer>
-        <span>본 페이지는 공부연습용 입니다.</span>
-        <p>@dition0221 @LeeMinGwi</p>
+        <div class="our-introduce">
+            <span>본 페이지는 공부연습용 입니다.</span>
+            <p>@dition0221 @LeeMinGwi</p>
+        </div>
     </footer>
     <script src="js/black-jack.js"></script>
 </body>

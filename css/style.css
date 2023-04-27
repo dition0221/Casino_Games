@@ -1,0 +1,9 @@
+@import "reset.css";
+
+/* screen */
+@import "screen/index.css";
+
+body {
+    background-color: wheat;
+    padding: 0 25px;
+}
