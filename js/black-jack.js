@@ -75,9 +75,15 @@ function sumCard(whoseCard) {
 const playButton = document.querySelector("#black-jack__play-button");
 const hitButton = document.querySelector("#black-jack__hit-button");
 const resetButton = document.querySelector("#black-jack__reset-button");
-playButton.addEventListener("click", () => {
+
+playButton.addEventListener("click", (event) => {
+    event.preventDefault();
     initialBlackjack();
     playButton.setAttribute("disabled", "true");
     hitButton.removeAttribute("disabled");
     resetButton.removeAttribute("disabled");
+});
+
+hitButton.addEventListener("click", (event) => {
+    event.preventDefault();
 });
