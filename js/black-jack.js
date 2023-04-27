@@ -12,6 +12,13 @@ const playerCard = [];
 const dealerSum = document.querySelector(".black-jack__sum-result tr:first-child th");
 const playerSum = document.querySelector(".black-jack__sum-result tr:last-child th");
 
+// ======================================================================
+
+const playButton = document.querySelector("#black-jack__play-button");
+const hitButton = document.querySelector("#black-jack__hit-button");
+const stayButton = document.querySelector("#black-jack__stay-button");
+const resetButton = document.querySelector("#black-jack__reset-button");
+
 /* 블랙잭 초기 설정 */
 function initialBlackjack() {
     pickCard(player, playerCard);
@@ -47,13 +54,14 @@ function sumCard(whoseCard) {
     // 합계 계산
     for (let i = 0; i < whoseCard.length; i++) {
         if ((whoseCard[i] === "J") || (whoseCard[i] === "Q") || (whoseCard[i] === "K")) {
-            whoseCard[i] = 10;
-        }
-        if (whoseCard[i] === "A") {
-            whoseCard[i] = 11;
+            sum += 10;
+        } else if (whoseCard[i] === "A") {
             aCount++;
+            sum += 11;
+        } else {
+            sum += whoseCard[i];
         }
-        sum += whoseCard[i];
+
     }
     // Ace카드 논외
     if (aCount && (sum > BLACKJACK)) {
@@ -69,19 +77,31 @@ function sumCard(whoseCard) {
 };
 
 /* Hit 버튼 클릭 시 */
-function Hit() {
+function hit() {
     pickCard(player, playerCard);
-    pickCard(dealer, dealerCard);
     playerSum.innerText = `${sumCard(playerCard)}`;
-    dealerSum.innerText = `${sumCard(dealerCard)}`;
 }
 
-// ======================================================================
+/* Stay 버튼 클릭 시 */
+function stay() {
+    if (sumCard(dealerCard) < 17) {
+        pickCard(dealer, dealerCard);
+        dealerSum.innerText = `${sumCard(dealerCard)}`;
+    }
+}
 
-const playButton = document.querySelector("#black-jack__play-button");
-const hitButton = document.querySelector("#black-jack__hit-button");
-const stayButton = document.querySelector("#black-jack__stay-button");
-const resetButton = document.querySelector("#black-jack__reset-button");
+/* Burst, BlackJack 판정 */
+function isBurst(whoseSum, whoseCard) {
+    if (sumCard(whoseCard) > 21) {
+        whoseSum.innerText = `Burst!`;
+        hitButton.setAttribute("disabled", "true");
+        stayButton.setAttribute("disabled", "true");
+    } else if (sumCard(whoseCard) == 21) {
+        whoseSum.innerText = `Black Jack!`;
+        hitButton.setAttribute("disabled", "true");
+        stayButton.setAttribute("disabled", "true");
+    }
+}
 
 /* 'Play'버튼 클릭 시 */
 playButton.addEventListener("click", (event) => {
@@ -91,15 +111,22 @@ playButton.addEventListener("click", (event) => {
     hitButton.removeAttribute("disabled");
     stayButton.removeAttribute("disabled");
     resetButton.removeAttribute("disabled");
+    isBurst(playerSum, playerCard);
+    isBurst(dealerSum, dealerCard);
 });
 
 /* 'Hit'버튼 클릭 시 */
 hitButton.addEventListener("click", (event) => {
     event.preventDefault();
-    Hit();
+    hit();
+    stayButton.removeAttribute("disabled");
+    isBurst(playerSum, playerCard);
 });
 
 /* 'Stay'버튼 클릭 시 */
 stayButton.addEventListener("click", (event) => {
     event.preventDefault();
+    stay();
+    stayButton.setAttribute("disabled", "true");
+    isBurst(dealerSum, dealerCard);
 });
