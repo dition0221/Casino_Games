@@ -73,6 +73,7 @@ const playButton = document.querySelector("#black-jack__play-button");
 const hitButton = document.querySelector("#black-jack__hit-button");
 const resetButton = document.querySelector("#black-jack__reset-button");
 
+/* 'Play'버튼 클릭 시 */
 playButton.addEventListener("click", (event) => {
     event.preventDefault();
     initialBlackjack();
@@ -81,6 +82,7 @@ playButton.addEventListener("click", (event) => {
     resetButton.removeAttribute("disabled");
 });
 
+/* 'Hit'버튼 클릭 시 */
 hitButton.addEventListener("click", (event) => {
     event.preventDefault();
 });
