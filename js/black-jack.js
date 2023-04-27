@@ -6,6 +6,7 @@ const BLACKJACK = 21;
 const count = document.querySelector("tr.black-jack__count");
 const dealer = document.querySelector("tr.black-jack__dealer");
 const player = document.querySelector("tr.black-jack__player");
+
 const dealerCard = [];
 const playerCard = [];
 const dealerSum = document.querySelector(".black-jack__sum-result tr:first-child th");
@@ -22,20 +23,21 @@ function initialBlackjack() {
 
 /* 카드 뽑는 함수 */
 function pickCard(who, whoseCard) {
-    let cd;
+    let newCard;
     while (1) {
-        cd = Math.floor(Math.random() * deck.length);
-        if (used.indexOf(cd) === -1) {
-            used.push(cd);
+        newCard = Math.floor(Math.random() * deck.length);
+        // 중복 제거
+        if (used.indexOf(newCard) === -1) {
+            used.push(newCard);
             break;
         } else {
             continue;
         }
     }
     // HTML에 생성
-    who.appendChild(document.createElement("td")).innerText = deck[cd];
+    who.appendChild(document.createElement("td")).innerText = deck[newCard];
     // 카드덱 생성
-    whoseCard.push(deck[cd]);
+    whoseCard.push(deck[newCard]);
 }
 
 /* 카드의 합계를 나타내는 함수 */
@@ -78,6 +80,7 @@ function Hit() {
 
 const playButton = document.querySelector("#black-jack__play-button");
 const hitButton = document.querySelector("#black-jack__hit-button");
+const stayButton = document.querySelector("#black-jack__stay-button");
 const resetButton = document.querySelector("#black-jack__reset-button");
 
 /* 'Play'버튼 클릭 시 */
@@ -86,6 +89,7 @@ playButton.addEventListener("click", (event) => {
     initialBlackjack();
     playButton.setAttribute("disabled", "true");
     hitButton.removeAttribute("disabled");
+    stayButton.removeAttribute("disabled");
     resetButton.removeAttribute("disabled");
 });
 
@@ -93,4 +97,9 @@ playButton.addEventListener("click", (event) => {
 hitButton.addEventListener("click", (event) => {
     event.preventDefault();
     Hit();
+});
+
+/* 'Stay'버튼 클릭 시 */
+stayButton.addEventListener("click", (event) => {
+    event.preventDefault();
 });
