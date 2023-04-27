@@ -11,14 +11,10 @@ function initialBlackjack() {
     const dealerCard = [];
     const playerCard = [];
 
-    const p1 = Math.floor(Math.random() * deck.length);
-    overlapCheck(p1, player, playerCard);
-    
-    const d1 = Math.floor(Math.random() * deck.length);
-    overlapCheck(d1, dealer, dealerCard);
-    
-    const p2 = Math.floor(Math.random() * deck.length);
-    overlapCheck(p2, player, playerCard);
+
+    overlapCheck(player, playerCard);
+    overlapCheck(dealer, dealerCard);
+    overlapCheck(player, playerCard);
 
     const dealerSum = document.querySelector(".black-jack__sum-result tr:first-child th");
     const playerSum = document.querySelector(".black-jack__sum-result tr:last-child th");
@@ -27,19 +23,20 @@ function initialBlackjack() {
 }
 
 /* 카드 중복 체크 */
-function overlapCheck(card, who, whoseCard) {
+function overlapCheck(who, whoseCard) {
     while (1) {
-        if (used.indexOf(card) === -1) {
-            used.push(card);
+        cd = Math.floor(Math.random() * deck.length);
+        if (used.indexOf(cd) === -1) {
+            used.push(cd);
             break;
         } else {
             continue;
         }
     }
     // HTML에 생성
-    who.appendChild(document.createElement("td")).innerText = deck[card];
+    who.appendChild(document.createElement("td")).innerText = deck[cd];
     // 카드덱 생성
-    whoseCard.push(deck[card]);
+    whoseCard.push(deck[cd]);
 }
 
 /* 카드의 합계를 나타내는 함수 */
