@@ -3,20 +3,19 @@ const deck = [].concat(card).concat(card).concat(card).concat(card);  // 1덱(52
 const used = []; // 사용한 숫자 배열
 const BLACKJACK = 21;
 
+const count = document.querySelector("tr.black-jack__count");
+const dealer = document.querySelector("tr.black-jack__dealer");
+const player = document.querySelector("tr.black-jack__player");
+const dealerCard = [];
+const playerCard = [];
+const dealerSum = document.querySelector(".black-jack__sum-result tr:first-child th");
+const playerSum = document.querySelector(".black-jack__sum-result tr:last-child th");
+
 /* 블랙잭 초기 설정 */
 function initialBlackjack() {
-    const count = document.querySelector("tr.black-jack__count");
-    const dealer = document.querySelector("tr.black-jack__dealer");
-    const player = document.querySelector("tr.black-jack__player");
-    const dealerCard = [];
-    const playerCard = [];
-
     pickCard(player, playerCard);
     pickCard(dealer, dealerCard);
     pickCard(player, playerCard);
-
-    const dealerSum = document.querySelector(".black-jack__sum-result tr:first-child th");
-    const playerSum = document.querySelector(".black-jack__sum-result tr:last-child th");
     playerSum.innerText = `${sumCard(playerCard)}`;
     dealerSum.innerText = `${sumCard(dealerCard)}`;
 }
@@ -67,6 +66,14 @@ function sumCard(whoseCard) {
     return sum;
 };
 
+/* Hit 버튼 클릭 시 */
+function Hit() {
+    pickCard(player, playerCard);
+    pickCard(dealer, dealerCard);
+    playerSum.innerText = `${sumCard(playerCard)}`;
+    dealerSum.innerText = `${sumCard(dealerCard)}`;
+}
+
 // ======================================================================
 
 const playButton = document.querySelector("#black-jack__play-button");
@@ -85,4 +92,5 @@ playButton.addEventListener("click", (event) => {
 /* 'Hit'버튼 클릭 시 */
 hitButton.addEventListener("click", (event) => {
     event.preventDefault();
+    Hit();
 });
