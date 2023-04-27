@@ -11,10 +11,9 @@ function initialBlackjack() {
     const dealerCard = [];
     const playerCard = [];
 
-
-    overlapCheck(player, playerCard);
-    overlapCheck(dealer, dealerCard);
-    overlapCheck(player, playerCard);
+    pickCard(player, playerCard);
+    pickCard(dealer, dealerCard);
+    pickCard(player, playerCard);
 
     const dealerSum = document.querySelector(".black-jack__sum-result tr:first-child th");
     const playerSum = document.querySelector(".black-jack__sum-result tr:last-child th");
@@ -22,8 +21,9 @@ function initialBlackjack() {
     dealerSum.innerText = `${sumCard(dealerCard)}`;
 }
 
-/* 카드 중복 체크 */
-function overlapCheck(who, whoseCard) {
+/* 카드 뽑는 함수 */
+function pickCard(who, whoseCard) {
+    let cd;
     while (1) {
         cd = Math.floor(Math.random() * deck.length);
         if (used.indexOf(cd) === -1) {
