@@ -76,31 +76,37 @@ function sumCard(whoseCard) {
     return sum;
 };
 
-/* Hit 버튼 클릭 시 */
+/* Hit 함수 */
 function hit() {
     pickCard(player, playerCard);
     playerSum.innerText = `${sumCard(playerCard)}`;
 }
 
-/* Stay 버튼 클릭 시 */
+/* Stay 함수 */
 function stay() {
-    if (sumCard(dealerCard) < 17) {
-        pickCard(dealer, dealerCard);
-        dealerSum.innerText = `${sumCard(dealerCard)}`;
+    while(1) {
+        if (sumCard(dealerCard) < 17) {
+            pickCard(dealer, dealerCard);
+            dealerSum.innerText = `${sumCard(dealerCard)}`;
+        } else {
+            break;
+        }
     }
 }
 
 /* Burst, BlackJack 판정 */
 function isBurst(whoseSum, whoseCard) {
-    if (sumCard(whoseCard) > 21) {
+    if (sumCard(whoseCard) > BLACKJACK) {
         whoseSum.innerText = `Burst!`;
-        hitButton.setAttribute("disabled", "true");
-        stayButton.setAttribute("disabled", "true");
-    } else if (sumCard(whoseCard) == 21) {
+        whoseSum.style.color = "red";
+    } else if (sumCard(whoseCard) === BLACKJACK) {
         whoseSum.innerText = `Black Jack!`;
-        hitButton.setAttribute("disabled", "true");
-        stayButton.setAttribute("disabled", "true");
+        whoseSum.style.color = "blue";
+    } else {
+        return;
     }
+    hitButton.setAttribute("disabled", "true");
+    stayButton.setAttribute("disabled", "true");
 }
 
 /* 'Play'버튼 클릭 시 */
@@ -128,5 +134,21 @@ stayButton.addEventListener("click", (event) => {
     event.preventDefault();
     stay();
     stayButton.setAttribute("disabled", "true");
+    hitButton.setAttribute("disabled", "true");
     isBurst(dealerSum, dealerCard);
+    const resultText = document.querySelector(".black-jack-nav__result-text");
+    /* 결과 보여주기 win/lose */
+    // console.log(typeof playerSum);
+    // console.log(playerSum);
+    // if (playerSum > dealerSum) {
+    //     resultText.innerText = `You Win !`;
+    //     resultText.style.color = "blue";
+    // } else if (playerSum === dealerSum) {
+    //     resultText.innerText = `You Draw !`;
+    // } else {
+    //     resultText.innerText = `You Lose !`;
+    //     resultText.style.color = "red";
+    // }
 });
+
+// playerSum과 dealerSum의 타입이 object임 -> number형으로 바꿔야 함

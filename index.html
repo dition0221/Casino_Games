@@ -19,12 +19,6 @@
                     <thead>
                         <tr class="black-jack__count">
                             <th>&lt;Name&gt;</th>
-                            <th>1st</th>
-                            <th>2nd</th>
-                            <th>3rd</th>
-                            <th>4th</th>
-                            <th>5th</th>
-                            <th>6th</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,11 +46,16 @@
                     </tbody>
                 </table>
             </div>
-            <div class="black-jack__buttons">
-                <button id="black-jack__play-button">Play !</button>
-                <button id="black-jack__hit-button" disabled>Hit !</button>
-                <button id="black-jack__stay-button" disabled>Stay !</button>
-                <input id="black-jack__reset-button" type="submit" value="Reset" disabled>
+            <div class="black-jack-nav">
+                <div class="black-jack-nav__buttons">
+                    <button id="black-jack__play-button">Play !</button>
+                    <button id="black-jack__hit-button" disabled>Hit !</button>
+                    <button id="black-jack__stay-button" disabled>Stay !</button>
+                    <input id="black-jack__reset-button" type="submit" value="Reset" disabled>
+                </div>
+                <div>
+                    <p class="black-jack-nav__result-text"></p>
+                </div>
             </div>
         </form>
     </main>

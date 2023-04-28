@@ -32,3 +32,8 @@ tr {
     bottom: 30px;
     right: 30px;
 }
+.black-jack-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
