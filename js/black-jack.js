@@ -9,8 +9,8 @@ const player = document.querySelector("tr.black-jack__player");
 
 const dealerCard = [];
 const playerCard = [];
-const dealerSum = document.querySelector(".black-jack__sum-result tr:first-child th");
-const playerSum = document.querySelector(".black-jack__sum-result tr:last-child th");
+let dealerSum = document.querySelector(".black-jack__sum-result tr:first-child th");
+let playerSum = document.querySelector(".black-jack__sum-result tr:last-child th");
 
 // ======================================================================
 
@@ -138,17 +138,15 @@ stayButton.addEventListener("click", (event) => {
     isBurst(dealerSum, dealerCard);
     const resultText = document.querySelector(".black-jack-nav__result-text");
     /* 결과 보여주기 win/lose */
-    // console.log(typeof playerSum);
-    // console.log(playerSum);
-    // if (playerSum > dealerSum) {
-    //     resultText.innerText = `You Win !`;
-    //     resultText.style.color = "blue";
-    // } else if (playerSum === dealerSum) {
-    //     resultText.innerText = `You Draw !`;
-    // } else {
-    //     resultText.innerText = `You Lose !`;
-    //     resultText.style.color = "red";
-    // }
+    playerSum = Number(playerSum.innerText);
+    dealerSum = Number(dealerSum.innerText);
+    if (playerSum > dealerSum) {
+        resultText.innerText = `You Win !`;
+        resultText.style.color = "blue";
+    } else if (playerSum === dealerSum) {
+        resultText.innerText = `You Draw !`;
+    } else {
+        resultText.innerText = `You Lose !`;
+        resultText.style.color = "red";
+    }
 });
-
-// playerSum과 dealerSum의 타입이 object임 -> number형으로 바꿔야 함
