@@ -34,6 +34,5 @@ tr {
 }
 .black-jack-nav {
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }

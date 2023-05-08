@@ -28,19 +28,27 @@
         - 하드코딩 변수화 (BLACKJACK = 21)
         - burst, black jack 시 글자에 색 추가
         - 'isBurst 함수' 코드 간소화
-    - Issue (해결 완료)
-        - 플레이어의 합계, 딜러의 합계(playerSum, dealerSum)의 유형을 object에서 number로 변경해야 함
+    - Issue
+        - [해결] 플레이어의 합계, 딜러의 합계(playerSum, dealerSum)의 유형을 object에서 number로 변경해야 함
 - **23-05-08**
     - Fix : 
-        - (230428 issue) Number형으로 변환
+        - [230428 issue] Number형으로 변환
             - console.dir()를 사용하여 값 탐색
             - Number(playerSum.innerText) + let타입을 사용하여 해결
+- **23-05-09**
+    - Update
+        - 카드 8덱으로 변경
+    - Fix
+        - 'play'시 플레이어가 블랙잭일 때 결과창이 나타나지 않는 현상 수정
+        - 'stay'시 딜러가 이김에도 불구하고 버스트까지 드로우하는 현상 수정
+            - 딜러가 17보다 작아도 플레이어보다 숫자가 크면 더 이상 드로우하지 않음
+        - 'Hit'시 블랙잭이 나오면 승리 결과 표시
 
   ---
   
 - **to-do**  
-    - 블랙잭 게임을 끝내는 기능 추가
     - 게임의 승패 및 승률 추가
+    - 배팅액
     - 버튼 클릭 시 효과음 넣기
     - 배경음 넣기
     - 'stay'버튼 1번 당 딜러가 1장씩만 드로우 하기

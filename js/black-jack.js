@@ -1,5 +1,6 @@
 const card = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"];
-const deck = [].concat(card).concat(card).concat(card).concat(card);  // 1덱(52장)
+const cardSet = [].concat(card).concat(card).concat(card).concat(card);  // 1덱(52장)
+const deck = [].concat(cardSet).concat(cardSet).concat(cardSet).concat(cardSet).concat(cardSet).concat(cardSet).concat(cardSet).concat(cardSet);
 const used = []; // 사용한 숫자 배열
 const BLACKJACK = 21;
 
@@ -11,6 +12,7 @@ const dealerCard = [];
 const playerCard = [];
 let dealerSum = document.querySelector(".black-jack__sum-result tr:first-child th");
 let playerSum = document.querySelector(".black-jack__sum-result tr:last-child th");
+const resultText = document.querySelector(".black-jack__result-text");
 
 // ======================================================================
 
@@ -61,7 +63,6 @@ function sumCard(whoseCard) {
         } else {
             sum += whoseCard[i];
         }
-
     }
     // Ace카드 논외
     if (aCount && (sum > BLACKJACK)) {
@@ -85,7 +86,7 @@ function hit() {
 /* Stay 함수 */
 function stay() {
     while(1) {
-        if (sumCard(dealerCard) < 17) {
+        if ((sumCard(dealerCard) < 17) && (sumCard(dealerCard) <= sumCard(playerCard))) {
             pickCard(dealer, dealerCard);
             dealerSum.innerText = `${sumCard(dealerCard)}`;
         } else {
@@ -99,6 +100,7 @@ function isBurst(whoseSum, whoseCard) {
     if (sumCard(whoseCard) > BLACKJACK) {
         whoseSum.innerText = `Burst!`;
         whoseSum.style.color = "red";
+        showLose();
     } else if (sumCard(whoseCard) === BLACKJACK) {
         whoseSum.innerText = `Black Jack!`;
         whoseSum.style.color = "blue";
@@ -107,6 +109,22 @@ function isBurst(whoseSum, whoseCard) {
     }
     hitButton.setAttribute("disabled", "true");
     stayButton.setAttribute("disabled", "true");
+}
+
+function showLose() {
+    resultText.innerText = `You Lose !`;
+    resultText.style.color = "red";
+}
+
+function showWin() {
+    resultText.innerText = `You Win !`;
+    resultText.style.color = "blue";
+}
+
+function ifPlayerBlackjack() {
+    if (sumCard(playerCard) === BLACKJACK) {
+        showWin();
+    }
 }
 
 /* 'Play'버튼 클릭 시 */
@@ -119,6 +137,7 @@ playButton.addEventListener("click", (event) => {
     resetButton.removeAttribute("disabled");
     isBurst(playerSum, playerCard);
     isBurst(dealerSum, dealerCard);
+    ifPlayerBlackjack();
 });
 
 /* 'Hit'버튼 클릭 시 */
@@ -127,6 +146,7 @@ hitButton.addEventListener("click", (event) => {
     hit();
     stayButton.removeAttribute("disabled");
     isBurst(playerSum, playerCard);
+    ifPlayerBlackjack();
 });
 
 /* 'Stay'버튼 클릭 시 */
@@ -136,17 +156,14 @@ stayButton.addEventListener("click", (event) => {
     stayButton.setAttribute("disabled", "true");
     hitButton.setAttribute("disabled", "true");
     isBurst(dealerSum, dealerCard);
-    const resultText = document.querySelector(".black-jack-nav__result-text");
     /* 결과 보여주기 win/lose */
-    playerSum = Number(playerSum.innerText);
-    dealerSum = Number(dealerSum.innerText);
-    if (playerSum > dealerSum) {
-        resultText.innerText = `You Win !`;
-        resultText.style.color = "blue";
-    } else if (playerSum === dealerSum) {
+    playerSumNum = Number(playerSum.innerText);
+    dealerSumNum = Number(dealerSum.innerText);
+    if ((playerSumNum > dealerSumNum) || (dealerSum.innerText === "Burst!")) {
+        showWin();
+    } else if (playerSumNum === dealerSumNum) {
         resultText.innerText = `You Draw !`;
-    } else {
-        resultText.innerText = `You Lose !`;
-        resultText.style.color = "red";
+    } else if ((dealerSumNum > playerSumNum) || (dealerSum.innerText === "Black Jack!")) {
+        showLose();
     }
 });
