@@ -23,6 +23,7 @@ tr {
 }
 .black-jack__sum {
     margin-left: 60px;
+    width: 122px;
 }
 .black-jack {
     display: flex;
@@ -35,4 +36,8 @@ tr {
 .black-jack-nav {
     display: flex;
     align-items: center;
+}
+.black-jack-nav__result-text {
+    margin-left: 10px;
+    font-weight: 600;
 }

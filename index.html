@@ -13,7 +13,7 @@
         <h1 class="title">Welcome to Javascript Casino Game World !</h1>
     </header>
     <main>
-        <form action="">
+        <div class="game">
             <div class="black-jack">
                 <table class="black-jack__table">
                     <thead>
@@ -45,19 +45,26 @@
                         </tr>
                     </tbody>
                 </table>
-                <div>
-                    <p class="black-jack__result-text"></p>
-                </div>
             </div>
             <div class="black-jack-nav">
                 <div class="black-jack-nav__buttons">
-                    <button id="black-jack__play-button">Play !</button>
-                    <button id="black-jack__hit-button" disabled>Hit !</button>
-                    <button id="black-jack__stay-button" disabled>Stay !</button>
-                    <input id="black-jack__reset-button" type="submit" value="Reset" disabled>
+                    <button id="black-jack-nav__play-button">Play !</button>
+                    <button id="black-jack-nav__hit-button" disabled>Hit !</button>
+                    <button id="black-jack-nav__stay-button" disabled>Stay !</button>
+                    <input id="black-jack-nav__reset-button" type="submit" value="Reset" disabled>
+                </div>
+                <div>
+                    <p class="black-jack-nav__result-text"></p>
                 </div>
             </div>
-        </form>
+            <div class="black-jack-score">
+                <span>-전</span>
+                <span>-승</span>
+                <span>-무</span>
+                <span>-패</span>
+                <span>-%</span>
+            </div>
+        </div>
     </main>
     <footer>
         <div class="our-introduce">

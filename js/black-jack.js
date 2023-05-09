@@ -12,14 +12,12 @@ const dealerCard = [];
 const playerCard = [];
 let dealerSum = document.querySelector(".black-jack__sum-result tr:first-child th");
 let playerSum = document.querySelector(".black-jack__sum-result tr:last-child th");
-const resultText = document.querySelector(".black-jack__result-text");
 
-// ======================================================================
-
-const playButton = document.querySelector("#black-jack__play-button");
-const hitButton = document.querySelector("#black-jack__hit-button");
-const stayButton = document.querySelector("#black-jack__stay-button");
-const resetButton = document.querySelector("#black-jack__reset-button");
+const playButton = document.querySelector("#black-jack-nav__play-button");
+const hitButton = document.querySelector("#black-jack-nav__hit-button");
+const stayButton = document.querySelector("#black-jack-nav__stay-button");
+const resetButton = document.querySelector("#black-jack-nav__reset-button");
+const resultText = document.querySelector(".black-jack-nav__result-text");
 
 /* 블랙잭 초기 설정 */
 function initialBlackjack() {
@@ -100,7 +98,6 @@ function isBurst(whoseSum, whoseCard) {
     if (sumCard(whoseCard) > BLACKJACK) {
         whoseSum.innerText = `Burst!`;
         whoseSum.style.color = "red";
-        showLose();
     } else if (sumCard(whoseCard) === BLACKJACK) {
         whoseSum.innerText = `Black Jack!`;
         whoseSum.style.color = "blue";
@@ -111,14 +108,39 @@ function isBurst(whoseSum, whoseCard) {
     stayButton.setAttribute("disabled", "true");
 }
 
-function showLose() {
-    resultText.innerText = `You Lose !`;
-    resultText.style.color = "red";
-}
-
 function showWin() {
     resultText.innerText = `You Win !`;
     resultText.style.color = "blue";
+    if (localStorage.getItem("Black-jack Win")) {
+        const winCount = Number(localStorage.getItem("Black-jack Win"));
+        localStorage.setItem("Black-jack Win", winCount + 1);
+    } else {
+        localStorage.setItem("Black-jack Win", 1);
+    }
+    console.log("-- Win --");
+}
+
+function showLose() {
+    resultText.innerText = `You Lose !`;
+    resultText.style.color = "red";
+    if (localStorage.getItem("Black-jack Lose")) {
+        const loseCount = Number(localStorage.getItem("Black-jack Lose"));
+        localStorage.setItem("Black-jack Lose", loseCount + 1);
+    } else {
+        localStorage.setItem("Black-jack Lose", 1);
+    }
+    console.log("-- Lose --");
+}
+
+function showDraw() {
+    resultText.innerText = `You Draw !`;
+    if (localStorage.getItem("Black-jack Draw")) {
+        const drawCount = Number(localStorage.getItem("Black-jack Draw"));
+        localStorage.setItem("Black-jack Draw", drawCount + 1);
+    } else {
+        localStorage.setItem("Black-jack Draw", 1);
+    }
+    console.log("-- Draw --");
 }
 
 function ifPlayerBlackjack() {
@@ -127,14 +149,20 @@ function ifPlayerBlackjack() {
     }
 }
 
+function ifPlayerBurst() {
+    if (sumCard(playerCard) > BLACKJACK) {
+        showLose();
+    }
+}
+
 /* 'Play'버튼 클릭 시 */
 playButton.addEventListener("click", (event) => {
     event.preventDefault();
-    initialBlackjack();
     playButton.setAttribute("disabled", "true");
     hitButton.removeAttribute("disabled");
     stayButton.removeAttribute("disabled");
     resetButton.removeAttribute("disabled");
+    initialBlackjack();
     isBurst(playerSum, playerCard);
     isBurst(dealerSum, dealerCard);
     ifPlayerBlackjack();
@@ -143,26 +171,27 @@ playButton.addEventListener("click", (event) => {
 /* 'Hit'버튼 클릭 시 */
 hitButton.addEventListener("click", (event) => {
     event.preventDefault();
-    hit();
     stayButton.removeAttribute("disabled");
+    hit();
     isBurst(playerSum, playerCard);
     ifPlayerBlackjack();
+    ifPlayerBurst();
 });
 
 /* 'Stay'버튼 클릭 시 */
 stayButton.addEventListener("click", (event) => {
     event.preventDefault();
-    stay();
     stayButton.setAttribute("disabled", "true");
     hitButton.setAttribute("disabled", "true");
+    stay();
     isBurst(dealerSum, dealerCard);
     /* 결과 보여주기 win/lose */
-    playerSumNum = Number(playerSum.innerText);
-    dealerSumNum = Number(dealerSum.innerText);
+    const playerSumNum = Number(playerSum.innerText);
+    const dealerSumNum = Number(dealerSum.innerText);
     if ((playerSumNum > dealerSumNum) || (dealerSum.innerText === "Burst!")) {
         showWin();
     } else if (playerSumNum === dealerSumNum) {
-        resultText.innerText = `You Draw !`;
+        showDraw();
     } else if ((dealerSumNum > playerSumNum) || (dealerSum.innerText === "Black Jack!")) {
         showLose();
     }
