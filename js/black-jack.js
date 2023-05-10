@@ -2,7 +2,14 @@ const card = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"];
 const cardSet = [].concat(card).concat(card).concat(card).concat(card);  // 1덱(52장)
 const deck = [].concat(cardSet).concat(cardSet).concat(cardSet).concat(cardSet).concat(cardSet).concat(cardSet).concat(cardSet).concat(cardSet);
 const used = []; // 사용한 숫자 배열
-const BLACKJACK = 21;
+
+const BLACKJACK_NUMBER = 21;
+const BURST_STRING = "Burst!";
+const BLACKJACK_STRING = "Black Jack!";
+const BLACKJACK_GAME_STORAGE = "Black-jack Games";
+const BLACKJACK_WIN_STORAGE = "Black-jack Wins";
+const BLACKJACK_LOSE_STORAGE = "Black-jack Loses";
+const BLACKJACK_DRAW_STORAGE = "Black-jack Draws";
 
 const count = document.querySelector("tr.black-jack__count");
 const dealer = document.querySelector("tr.black-jack__dealer");
@@ -18,6 +25,14 @@ const hitButton = document.querySelector("#black-jack-nav__hit-button");
 const stayButton = document.querySelector("#black-jack-nav__stay-button");
 const resetButton = document.querySelector("#black-jack-nav__reset-button");
 const resultText = document.querySelector(".black-jack-nav__result-text");
+
+const gameCount = document.querySelector(".black-jack-score__score:first-child");
+const winCount = document.querySelector(".black-jack-score__score:nth-child(2)");
+const drawCount = document.querySelector(".black-jack-score__score:nth-child(3)");
+const loseCount = document.querySelector(".black-jack-score__score:nth-child(4)");
+const winRatio = document.querySelector(".black-jack-score__score:last-child");
+
+showTotalGameRecord();
 
 /* 블랙잭 초기 설정 */
 function initialBlackjack() {
@@ -63,11 +78,11 @@ function sumCard(whoseCard) {
         }
     }
     // Ace카드 논외
-    if (aCount && (sum > BLACKJACK)) {
+    if (aCount && (sum > BLACKJACK_NUMBER)) {
         while(1) {
             sum -= 10;
             aCount--;
-            if ((aCount === 0) || (sum <= BLACKJACK)) {
+            if ((aCount === 0) || (sum <= BLACKJACK_NUMBER)) {
                 break;
             }
         }
@@ -95,11 +110,11 @@ function stay() {
 
 /* Burst, BlackJack 판정 */
 function isBurst(whoseSum, whoseCard) {
-    if (sumCard(whoseCard) > BLACKJACK) {
-        whoseSum.innerText = `Burst!`;
+    if (sumCard(whoseCard) > BLACKJACK_NUMBER) {
+        whoseSum.innerText = BURST_STRING;
         whoseSum.style.color = "red";
-    } else if (sumCard(whoseCard) === BLACKJACK) {
-        whoseSum.innerText = `Black Jack!`;
+    } else if (sumCard(whoseCard) === BLACKJACK_NUMBER) {
+        whoseSum.innerText = BLACKJACK_STRING;
         whoseSum.style.color = "blue";
     } else {
         return;
@@ -109,49 +124,70 @@ function isBurst(whoseSum, whoseCard) {
 }
 
 function showWin() {
-    resultText.innerText = `You Win !`;
+    resultText.innerText = "You Win !";
     resultText.style.color = "blue";
-    if (localStorage.getItem("Black-jack Win")) {
-        const winCount = Number(localStorage.getItem("Black-jack Win"));
-        localStorage.setItem("Black-jack Win", winCount + 1);
-    } else {
-        localStorage.setItem("Black-jack Win", 1);
-    }
+    setGameRecord(BLACKJACK_GAME_STORAGE);
+    setGameRecord(BLACKJACK_WIN_STORAGE);
+    showTotalGameRecord();
     console.log("-- Win --");
 }
 
 function showLose() {
-    resultText.innerText = `You Lose !`;
+    resultText.innerText = "You Lose !";
     resultText.style.color = "red";
-    if (localStorage.getItem("Black-jack Lose")) {
-        const loseCount = Number(localStorage.getItem("Black-jack Lose"));
-        localStorage.setItem("Black-jack Lose", loseCount + 1);
-    } else {
-        localStorage.setItem("Black-jack Lose", 1);
-    }
+    setGameRecord(BLACKJACK_GAME_STORAGE);
+    setGameRecord(BLACKJACK_LOSE_STORAGE);
+    showTotalGameRecord();
     console.log("-- Lose --");
 }
 
 function showDraw() {
-    resultText.innerText = `You Draw !`;
-    if (localStorage.getItem("Black-jack Draw")) {
-        const drawCount = Number(localStorage.getItem("Black-jack Draw"));
-        localStorage.setItem("Black-jack Draw", drawCount + 1);
-    } else {
-        localStorage.setItem("Black-jack Draw", 1);
-    }
+    resultText.innerText = "You Draw !";
+    setGameRecord(BLACKJACK_GAME_STORAGE);
+    setGameRecord(BLACKJACK_DRAW_STORAGE);
+    showTotalGameRecord();
     console.log("-- Draw --");
 }
 
 function ifPlayerBlackjack() {
-    if (sumCard(playerCard) === BLACKJACK) {
+    if (sumCard(playerCard) === BLACKJACK_NUMBER) {
         showWin();
     }
 }
 
 function ifPlayerBurst() {
-    if (sumCard(playerCard) > BLACKJACK) {
+    if (sumCard(playerCard) > BLACKJACK_NUMBER) {
         showLose();
+    }
+}
+
+function setGameRecord(record) {
+    if (localStorage.getItem(record)) {
+        const count = Number(localStorage.getItem(record));
+        localStorage.setItem(record, count + 1);
+    } else {
+        localStorage.setItem(record, 1);
+    }
+}
+
+function showGameRecord(record, recordCount) {
+    if (localStorage.getItem(record)) {
+        recordCount.innerHTML = localStorage.getItem(record);
+    } else {
+        recordCount.innerText = "0";
+    }
+}
+
+function showTotalGameRecord() {
+    showGameRecord(BLACKJACK_GAME_STORAGE, gameCount);
+    showGameRecord(BLACKJACK_WIN_STORAGE, winCount);
+    showGameRecord(BLACKJACK_DRAW_STORAGE, drawCount);
+    showGameRecord(BLACKJACK_LOSE_STORAGE, loseCount);
+    if (gameCount.innerText !== "0") {
+        const ratio = (Number(winCount.innerText) / Number(gameCount.innerText) * 100).toFixed(2);
+        winRatio.innerText = ratio;
+    } else {
+        winRatio.innerText = "0.00";
     }
 }
 
@@ -188,11 +224,17 @@ stayButton.addEventListener("click", (event) => {
     /* 결과 보여주기 win/lose */
     const playerSumNum = Number(playerSum.innerText);
     const dealerSumNum = Number(dealerSum.innerText);
-    if ((playerSumNum > dealerSumNum) || (dealerSum.innerText === "Burst!")) {
+    if ((playerSumNum > dealerSumNum) || (dealerSum.innerText === BURST_STRING)) {
         showWin();
     } else if (playerSumNum === dealerSumNum) {
         showDraw();
-    } else if ((dealerSumNum > playerSumNum) || (dealerSum.innerText === "Black Jack!")) {
+    } else if ((dealerSumNum > playerSumNum) || (dealerSum.innerText === BLACKJACK_STRING)) {
         showLose();
+    }
+});
+
+resetButton.addEventListener("click", () => {
+    if(!resultText.innerText) {
+        setGameRecord(BLACKJACK_LOSE_STORAGE);
     }
 });
