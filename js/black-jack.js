@@ -26,12 +26,15 @@ const stayButton = document.querySelector("#black-jack-nav__stay-button");
 const resetButton = document.querySelector("#black-jack-nav__reset-button");
 const resultText = document.querySelector(".black-jack-nav__result-text");
 
+const gameRecord = document.querySelector(".black-jack-score");
 const gameCount = document.querySelector(".black-jack-score__score:first-child");
 const winCount = document.querySelector(".black-jack-score__score:nth-child(2)");
 const drawCount = document.querySelector(".black-jack-score__score:nth-child(3)");
 const loseCount = document.querySelector(".black-jack-score__score:nth-child(4)");
-const winRatio = document.querySelector(".black-jack-score__score:last-child");
+const winRatio = document.querySelector(".black-jack-score__score:last-of-type");
+const gameRecordResetBtn = document.querySelector(".black-jack-score__reset");
 
+// 웹페이지 load 시 게임전적 불러오기
 showTotalGameRecord();
 
 /* 블랙잭 초기 설정 */
@@ -191,7 +194,12 @@ function showTotalGameRecord() {
     }
 }
 
-/* 'Play'버튼 클릭 시 */
+// function sleep(ms) {
+//     const wakeUpTime = Date.now() + ms;
+//     while(Date.now() < wakeUpTime) {}
+// }
+
+/* 'Play'버튼 */
 playButton.addEventListener("click", (event) => {
     event.preventDefault();
     playButton.setAttribute("disabled", "true");
@@ -204,7 +212,7 @@ playButton.addEventListener("click", (event) => {
     ifPlayerBlackjack();
 });
 
-/* 'Hit'버튼 클릭 시 */
+/* 'Hit'버튼 */
 hitButton.addEventListener("click", (event) => {
     event.preventDefault();
     stayButton.removeAttribute("disabled");
@@ -214,7 +222,7 @@ hitButton.addEventListener("click", (event) => {
     ifPlayerBurst();
 });
 
-/* 'Stay'버튼 클릭 시 */
+/* 'Stay'버튼 */
 stayButton.addEventListener("click", (event) => {
     event.preventDefault();
     stayButton.setAttribute("disabled", "true");
@@ -235,6 +243,18 @@ stayButton.addEventListener("click", (event) => {
 
 resetButton.addEventListener("click", () => {
     if(!resultText.innerText) {
+        setGameRecord(BLACKJACK_GAME_STORAGE);
         setGameRecord(BLACKJACK_LOSE_STORAGE);
     }
+});
+
+gameRecordResetBtn.addEventListener("click", () => {
+    const ok = confirm("정말 모든 전적을 초기화 하시겠습니까?");
+    if (ok) {
+        localStorage.removeItem(BLACKJACK_GAME_STORAGE);
+        localStorage.removeItem(BLACKJACK_WIN_STORAGE);
+        localStorage.removeItem(BLACKJACK_DRAW_STORAGE);
+        localStorage.removeItem(BLACKJACK_LOSE_STORAGE);
+    }
+    window.location.reload();
 });
