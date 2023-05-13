@@ -221,7 +221,8 @@ function showTotalGameRecord() {
   showGameRecord(BLACKJACK_LOSE_STORAGE, loseCount);
   if (gameCount.innerText !== "0") {
     const ratio = (
-      (Number(winCount.innerText) / Number(gameCount.innerText)) *
+      (Number(winCount.innerText) /
+        (Number(gameCount.innerText) - Number(drawCount.innerText))) *
       100
     ).toFixed(2);
     winRatio.innerText = ratio;
