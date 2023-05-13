@@ -45,3 +45,14 @@ tr {
 strong {
   font-weight: bold;
 }
+.black-jack__description th,
+.black-jack__description tr {
+  border: none;
+}
+.black-jack__description th {
+  width: 121px;
+  height: 41px;
+  box-sizing: border-box;
+  text-align: start;
+  padding-left: 10px;
+}

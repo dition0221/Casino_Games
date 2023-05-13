@@ -25,11 +25,17 @@ const player = document.querySelector("tr.black-jack__player");
 
 const dealerCard = [];
 const playerCard = [];
-let dealerSum = document.querySelector(
+const dealerSum = document.querySelector(
   ".black-jack__sum-result tr:first-child th"
 );
-let playerSum = document.querySelector(
+const playerSum = document.querySelector(
   ".black-jack__sum-result tr:last-child th"
+);
+const dealerDescription = document.querySelector(
+  ".black-jack__description-result tr:first-child th"
+);
+const playerDescription = document.querySelector(
+  ".black-jack__description-result tr:last-child th"
 );
 
 const playButton = document.querySelector("#black-jack-nav__play-button");
@@ -137,12 +143,14 @@ function stay() {
 }
 
 /* Burst, BlackJack 판정 */
-function isBurst(whoseSum, whoseCard) {
+function isBurst(whoseDescription, whoseCard, whoseSum) {
   if (sumCard(whoseCard) > BLACKJACK_NUMBER) {
-    whoseSum.innerText = BURST_STRING;
+    whoseDescription.innerText = BURST_STRING;
+    whoseDescription.style.color = "red";
     whoseSum.style.color = "red";
   } else if (sumCard(whoseCard) === BLACKJACK_NUMBER) {
-    whoseSum.innerText = BLACKJACK_STRING;
+    whoseDescription.innerText = BLACKJACK_STRING;
+    whoseDescription.style.color = "blue";
     whoseSum.style.color = "blue";
   } else {
     return;
@@ -235,8 +243,8 @@ playButton.addEventListener("click", (event) => {
   stayButton.removeAttribute("disabled");
   resetButton.removeAttribute("disabled");
   initialBlackjack();
-  isBurst(playerSum, playerCard);
-  isBurst(dealerSum, dealerCard);
+  isBurst(playerDescription, playerCard, playerSum);
+  isBurst(dealerDescription, dealerCard, dealerSum);
   ifPlayerBlackjack();
 });
 
@@ -245,7 +253,7 @@ hitButton.addEventListener("click", (event) => {
   event.preventDefault();
   stayButton.removeAttribute("disabled");
   hit();
-  isBurst(playerSum, playerCard);
+  isBurst(playerDescription, playerCard, playerSum);
   ifPlayerBlackjack();
   ifPlayerBurst();
 });
@@ -256,18 +264,15 @@ stayButton.addEventListener("click", (event) => {
   stayButton.setAttribute("disabled", "true");
   hitButton.setAttribute("disabled", "true");
   stay();
-  isBurst(dealerSum, dealerCard);
+  isBurst(dealerDescription, dealerCard, dealerSum);
   /* 결과 보여주기 win/lose */
   const playerSumNum = Number(playerSum.innerText);
   const dealerSumNum = Number(dealerSum.innerText);
-  if (playerSumNum > dealerSumNum || dealerSum.innerText === BURST_STRING) {
+  if (playerSumNum > dealerSumNum || dealerSumNum > BLACKJACK_NUMBER) {
     showWin();
   } else if (playerSumNum === dealerSumNum) {
     showDraw();
-  } else if (
-    dealerSumNum > playerSumNum ||
-    dealerSum.innerText === BLACKJACK_STRING
-  ) {
+  } else if (dealerSumNum > playerSumNum || dealerSumNum === BLACKJACK_NUMBER) {
     showLose();
   }
 });
