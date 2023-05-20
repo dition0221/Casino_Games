@@ -3,11 +3,12 @@
 
 <head>
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"> -->
+    <!-- <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css"> -->
     <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slot Machine</title>
+    <title>Slot Machine | Javascript Casino</title>
 </head>
 
 <body>
@@ -34,11 +35,32 @@
                 </tr>
             </tbody>
         </table>
-        <form class="buttons">
-            <button class="buttons__play">Play</button>
-            <button class="buttons__stop" disabled>Stop</button>
-            <button class="buttons__reset" disabled>Reset</button>
-        </form>
+        <div class="slot-machine-buttons">
+            <input class="slot-machine-buttons__play" type="submit" value="Play" />
+            <button class="slot-machine-buttons__stop" disabled>Stop</button>
+        </div>
+        <div class="money">
+            <div>
+                <span>나의 금액 : </span>
+                <span class="money__my-money"></span>
+                <span class="money__variable-amount"></span>
+                <span class="money__bonus-amount"></span>
+            </div>
+            <div class="moeny__betting">
+                <label for="money__betting-money">배팅 금액 : </label>
+                <input id="money__betting-money" type="number" placeholder="배팅금액 입력" />
+            </div>
+        </div>
+        <div class="rule-description">
+            <h4>슬롯머신 보상 설명</h4>
+            <p>1등 : 777 / 0.1 % / x50</p>
+            <p>2등 : 777을 제외한 같은 숫자 3개 / 0.9% / x10</p>
+            <p>3등 : 7이 2개 / 2.7% / x5</p>
+            <p>4등 : 같은 숫자가 2개(77 제외) / 24.3% / x0</p>
+            <p>5등 : 7-1개/ 24.3% / x(-0.5)</p>
+            <p>Bonus : 9칸 중 7이 5개 이상 / 약 0.823% / +5,000,000</p>
+            <p>이외 : 탈락 / x(-1)</p>
+        </div>
     </main>
     <footer>
         <div class="our-introduce">

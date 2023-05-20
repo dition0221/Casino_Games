@@ -1,3 +1,4 @@
+/* 카드 덱 */
 const card = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"];
 const cardSet = [].concat(card).concat(card).concat(card).concat(card); // 1덱(52장)
 const deck = []
@@ -11,6 +12,7 @@ const deck = []
   .concat(cardSet);
 const used = []; // 사용한 숫자 배열
 
+/* 상수 변수 */
 const BLACKJACK_NUMBER = 21;
 const BURST_STRING = "Burst!";
 const BLACKJACK_STRING = "Black Jack!";
@@ -19,6 +21,12 @@ const BLACKJACK_WIN_STORAGE = "Black-jack Wins";
 const BLACKJACK_LOSE_STORAGE = "Black-jack Loses";
 const BLACKJACK_DRAW_STORAGE = "Black-jack Draws";
 
+/* 배당률(odds) */
+const ODDS_WIN = 1;
+const ODDS_DRAW = 0;
+const ODDS_LOSE = -1;
+
+let isPlaying = false;
 const count = document.querySelector("tr.black-jack__count");
 const dealer = document.querySelector("tr.black-jack__dealer");
 const player = document.querySelector("tr.black-jack__player");
@@ -44,6 +52,7 @@ const stayButton = document.querySelector("#black-jack-nav__stay-button");
 const resetButton = document.querySelector("#black-jack-nav__reset-button");
 const resultText = document.querySelector(".black-jack-nav__result-text");
 
+/* 게임 전적 (localStorage)*/
 const gameRecord = document.querySelector(".black-jack-score");
 const gameCount = document.querySelector(
   ".black-jack-score__score:first-of-type"
@@ -62,10 +71,19 @@ const winRatio = document.querySelector(
 );
 const gameRecordResetBtn = document.querySelector(".black-jack-score__reset");
 
-// 웹페이지 load 시 게임전적 불러오기
-showTotalGameRecord();
+/* Money */
+const myMoney = document.querySelector(".money__my-money");
+const bettingMoney = document.querySelector("#money__betting-money");
+const variableMoney = document.querySelector(".money__variable-amount");
+const BLACKJACK_BETTING_MONEY = "Black-jack Betting-money";
+const LOCAL_STORAGE_MONEY = "money";
 
-/* 블랙잭 초기 설정 */
+// 웹페이지 load 시 게임전적, 나의 금액 불러오기
+showTotalGameRecord();
+showMyMoney();
+bettingMoney.value = localStorage.getItem(BLACKJACK_BETTING_MONEY); // 이전 배팅금액 가져오기
+
+/* 블랙잭 초기 설정 함수 */
 function initialBlackjack() {
   pickCard(player, playerCard);
   pickCard(dealer, dealerCard);
@@ -159,29 +177,47 @@ function isBurst(whoseDescription, whoseCard, whoseSum) {
   stayButton.setAttribute("disabled", "true");
 }
 
+/* 이겼을 때 */
 function showWin() {
+  // 결과창
   resultText.innerText = "You Win !";
   resultText.style.color = "blue";
+  // 게임전적
   setGameRecord(BLACKJACK_GAME_STORAGE);
   setGameRecord(BLACKJACK_WIN_STORAGE);
   showTotalGameRecord();
+  // 금액 계산
+  calcMoney(ODDS_WIN);
+  // console.log
   console.log("-- Win --");
 }
 
+/* 졌을 때 */
 function showLose() {
+  // 결과창
   resultText.innerText = "You Lose !";
   resultText.style.color = "red";
+  // 개임전적
   setGameRecord(BLACKJACK_GAME_STORAGE);
   setGameRecord(BLACKJACK_LOSE_STORAGE);
   showTotalGameRecord();
+  // 금액 계산
+  calcMoney(ODDS_LOSE);
+  // console.log
   console.log("-- Lose --");
 }
 
+/* 비겼을 때 */
 function showDraw() {
+  // 결과창
   resultText.innerText = "You Draw !";
+  // 개임전적
   setGameRecord(BLACKJACK_GAME_STORAGE);
   setGameRecord(BLACKJACK_DRAW_STORAGE);
   showTotalGameRecord();
+  // 금액 계산
+  calcMoney(ODDS_DRAW);
+  // console.log
   console.log("-- Draw --");
 }
 
@@ -231,6 +267,40 @@ function showTotalGameRecord() {
   }
 }
 
+/* 나의 금액 보여주기 */
+function showMyMoney() {
+  // 처음 접속 시 1천만 원 지급
+  if (!localStorage.getItem(LOCAL_STORAGE_MONEY)) {
+    localStorage.setItem(LOCAL_STORAGE_MONEY, 10000000);
+  }
+  myMoney.innerText = localStorage.getItem(LOCAL_STORAGE_MONEY);
+}
+
+/* 배팅 금액 체크 */
+function checkBettingMoney() {
+  if (isNaN(bettingMoney.value) || bettingMoney.value === "") {
+    return;
+  } else {
+    isPlaying = true;
+  }
+}
+
+/* 배당률에 따른 금액 계산 */
+function calcMoney(odds) {
+  const variableAmount = Math.floor(Number(bettingMoney.value) * odds);
+  money = Number(localStorage.getItem(LOCAL_STORAGE_MONEY)) + variableAmount;
+  localStorage.setItem(LOCAL_STORAGE_MONEY, money);
+  // console.log
+  if (odds < 0) {
+    console.log(`${variableAmount} x(${odds})`);
+    variableMoney.innerText = `(${variableAmount} x(${odds}))`;
+  } else {
+    console.log(`+${variableAmount} x(${odds})`);
+    variableMoney.innerText = `(+${variableAmount} x(${odds}))`;
+  }
+  showMyMoney();
+}
+
 // function sleep(ms) {
 //     const wakeUpTime = Date.now() + ms;
 //     while(Date.now() < wakeUpTime) {}
@@ -239,14 +309,24 @@ function showTotalGameRecord() {
 /* 'Play'버튼 */
 playButton.addEventListener("click", (event) => {
   event.preventDefault();
-  playButton.setAttribute("disabled", "true");
-  hitButton.removeAttribute("disabled");
-  stayButton.removeAttribute("disabled");
-  resetButton.removeAttribute("disabled");
-  initialBlackjack();
-  isBurst(playerDescription, playerCard, playerSum);
-  isBurst(dealerDescription, dealerCard, dealerSum);
-  ifPlayerBlackjack();
+  checkBettingMoney();
+  if (isPlaying) {
+    // 셋팅
+    playButton.setAttribute("disabled", "true");
+    hitButton.removeAttribute("disabled");
+    stayButton.removeAttribute("disabled");
+    resetButton.removeAttribute("disabled");
+    bettingMoney.setAttribute("disabled", "true");
+    localStorage.setItem(BLACKJACK_BETTING_MONEY, bettingMoney.value); // 배팅금액 저장
+    variableMoney.innerText = "";
+    // 동작
+    initialBlackjack();
+    isBurst(playerDescription, playerCard, playerSum);
+    isBurst(dealerDescription, dealerCard, dealerSum);
+    ifPlayerBlackjack();
+  } else {
+    alert("배팅 금액을 숫자로 입력해주세요.");
+  }
 });
 
 /* 'Hit'버튼 */
@@ -278,6 +358,7 @@ stayButton.addEventListener("click", (event) => {
   }
 });
 
+/* 게임이 끝나지 않았을 때 reset 버튼 누를 시 */
 resetButton.addEventListener("click", () => {
   if (!resultText.innerText) {
     setGameRecord(BLACKJACK_GAME_STORAGE);
@@ -285,6 +366,7 @@ resetButton.addEventListener("click", () => {
   }
 });
 
+/* 전적 초기화 버튼 */
 gameRecordResetBtn.addEventListener("click", () => {
   const ok = confirm("정말 모든 전적을 초기화 하시겠습니까?");
   if (ok) {
