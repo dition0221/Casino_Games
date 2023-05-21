@@ -361,8 +361,11 @@ stayButton.addEventListener("click", (event) => {
 /* 게임이 끝나지 않았을 때 reset 버튼 누를 시 */
 resetButton.addEventListener("click", () => {
   if (!resultText.innerText) {
+    // 패 전적 추가
     setGameRecord(BLACKJACK_GAME_STORAGE);
     setGameRecord(BLACKJACK_LOSE_STORAGE);
+    // 배팅액 잃음
+    calcMoney(ODDS_LOSE);
   }
 });
 

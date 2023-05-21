@@ -93,6 +93,16 @@
     - 한 판이 끝났을 때, 이전 배팅한 금액 값을 그대로 놔두기
   - Fix : SlotMachine
     - Stop 버튼을 눌렀을 때, Stop 버튼을 비활성화 하기
+- **23-05-22**
+  - Update : Main
+    - BGM
+      - audio의 currentTime을 localStorage에 저장해 페이지 이동 시에도 이어서 재생
+      - 단점
+        - 페이지 이동 시 프레임이 끊김
+        - 재방문 시 처음부터 재생하지 않음
+        - Black-Jack의 reset 버튼이 새로고침 버튼이라 프레임이 끊김
+  - Fix : Black-Jack
+    - 게임 도중에 reset 버튼 클릭 시 배팅액을 잃지않는 현상 수정
 
 ---
 
@@ -102,12 +112,9 @@
 
 - 'index.css' 수정 - 메인페이지를 따로 만들 예정
 - 효과음 넣기
-- BGM 넣기 : 사용할 BGM
-  - https://youtu.be/lG149vio2Qw / 로스트아크 볼라르 섬
-  - https://youtu.be/MWSl6yS6o4s / 로스트아크 쿠크세이튼 마리오
-  - HTML 페이지를 이동하더라도 BGM이 멈추지 않고, 계속 재생되도록 하기
-  - 반복재생
+- BGM
   - on/off
+  - control 바 만들어주기
 - 배팅액
   - 시드머니가 0 일 시 게임오버
 
