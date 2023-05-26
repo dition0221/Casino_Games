@@ -109,9 +109,22 @@ function resultSlotMachine() {
 
 /* 배팅 금액 체크 */
 function checkBettingMoney() {
-  if (isNaN(bettingMoney.value) || bettingMoney.value === "") {
-    return;
-  } else {
+  // 잘못 입력 시
+  if (
+    isNaN(bettingMoney.value) ||
+    bettingMoney.value === "" ||
+    bettingMoney.value <= 0
+  ) {
+    alert("1원 이상을 배팅하세요.");
+  }
+  // 배팅 금액 > 나의 금액 일 시
+  else if (
+    bettingMoney.value > Number(localStorage.getItem(LOCAL_STORAGE_MONEY))
+  ) {
+    alert("나의 금액 보다 배팅 금액이 더 많습니다.");
+  }
+  // 정상 작동
+  else {
     isPlaying = true;
   }
 }
@@ -158,8 +171,6 @@ playBtn.addEventListener("click", (event) => {
     variableMoney.innerText = "";
     // 동작
     startSlotMachine();
-  } else {
-    alert("배팅 금액을 숫자로 입력해주세요.");
   }
 });
 

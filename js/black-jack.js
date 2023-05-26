@@ -78,15 +78,18 @@ const variableMoney = document.querySelector(".money__variable-amount");
 const BLACKJACK_BETTING_MONEY = "Black-jack Betting-money";
 const LOCAL_STORAGE_MONEY = "money";
 
-// 웹페이지 load 시 게임전적, 나의 금액 불러오기
+/* ! 웹페이지 load 시 게임전적, 나의 금액 불러오기 */
 showTotalGameRecord();
 showMyMoney();
-bettingMoney.value = localStorage.getItem(BLACKJACK_BETTING_MONEY); // 이전 배팅금액 가져오기
+// 이전 배팅금액 가져오기
+bettingMoney.value = localStorage.getItem(BLACKJACK_BETTING_MONEY);
 
 /* 블랙잭 초기 설정 함수 */
-function initialBlackjack() {
+async function initialBlackjack() {
   pickCard(player, playerCard);
+  await delay();
   pickCard(dealer, dealerCard);
+  await delay();
   pickCard(player, playerCard);
   playerSum.innerText = `${sumCard(playerCard)}`;
   dealerSum.innerText = `${sumCard(dealerCard)}`;
@@ -146,7 +149,7 @@ function hit() {
 }
 
 /* Stay 함수 */
-function stay() {
+async function stay() {
   while (1) {
     if (
       sumCard(dealerCard) < 17 &&
@@ -154,6 +157,13 @@ function stay() {
     ) {
       pickCard(dealer, dealerCard);
       dealerSum.innerText = `${sumCard(dealerCard)}`;
+      // 시간 딜레이
+      if (
+        sumCard(dealerCard) < 17 &&
+        sumCard(dealerCard) <= sumCard(playerCard)
+      ) {
+        await delay();
+      }
     } else {
       break;
     }
@@ -179,6 +189,7 @@ function isBurst(whoseDescription, whoseCard, whoseSum) {
 
 /* 이겼을 때 */
 function showWin() {
+  isPlaying = false;
   // 결과창
   resultText.innerText = "You Win !";
   resultText.style.color = "blue";
@@ -194,6 +205,7 @@ function showWin() {
 
 /* 졌을 때 */
 function showLose() {
+  isPlaying = false;
   // 결과창
   resultText.innerText = "You Lose !";
   resultText.style.color = "red";
@@ -209,6 +221,7 @@ function showLose() {
 
 /* 비겼을 때 */
 function showDraw() {
+  isPlaying = false;
   // 결과창
   resultText.innerText = "You Draw !";
   // 개임전적
@@ -221,27 +234,34 @@ function showDraw() {
   console.log("-- Draw --");
 }
 
+/* Player가 Black-Jack 일 때 */
 function ifPlayerBlackjack() {
   if (sumCard(playerCard) === BLACKJACK_NUMBER) {
     showWin();
   }
 }
 
+/* Player가 Burst 일 때 */
 function ifPlayerBurst() {
   if (sumCard(playerCard) > BLACKJACK_NUMBER) {
     showLose();
   }
 }
 
+/* 전적 저장 */
 function setGameRecord(record) {
+  // 최초 저장 시
   if (localStorage.getItem(record)) {
     const count = Number(localStorage.getItem(record));
     localStorage.setItem(record, count + 1);
-  } else {
+  }
+  // 최초 저장이 아닐 시
+  else {
     localStorage.setItem(record, 1);
   }
 }
 
+/* 전적 보여주기 */
 function showGameRecord(record, recordCount) {
   if (localStorage.getItem(record)) {
     recordCount.innerHTML = localStorage.getItem(record);
@@ -250,11 +270,13 @@ function showGameRecord(record, recordCount) {
   }
 }
 
+/* 유저에게 전체 전적을 보여주기 */
 function showTotalGameRecord() {
   showGameRecord(BLACKJACK_GAME_STORAGE, gameCount);
   showGameRecord(BLACKJACK_WIN_STORAGE, winCount);
   showGameRecord(BLACKJACK_DRAW_STORAGE, drawCount);
   showGameRecord(BLACKJACK_LOSE_STORAGE, loseCount);
+  // 승률 계산
   if (gameCount.innerText !== "0") {
     const ratio = (
       (Number(winCount.innerText) /
@@ -278,33 +300,47 @@ function showMyMoney() {
 
 /* 배팅 금액 체크 */
 function checkBettingMoney() {
-  if (isNaN(bettingMoney.value) || bettingMoney.value === "") {
-    return;
-  } else {
+  // 잘못 입력 시
+  if (
+    isNaN(bettingMoney.value) ||
+    bettingMoney.value === "" ||
+    bettingMoney.value <= 0
+  ) {
+    alert("1원 이상을 배팅하세요.");
+  }
+  // 배팅 금액 > 나의 금액 일 시
+  else if (
+    bettingMoney.value > Number(localStorage.getItem(LOCAL_STORAGE_MONEY))
+  ) {
+    alert("나의 금액 보다 배팅 금액이 더 많습니다.");
+  }
+  // 정상 작동
+  else {
     isPlaying = true;
   }
 }
 
 /* 배당률에 따른 금액 계산 */
 function calcMoney(odds) {
-  const variableAmount = Math.floor(Number(bettingMoney.value) * odds);
-  money = Number(localStorage.getItem(LOCAL_STORAGE_MONEY)) + variableAmount;
+  const variableMoney = Math.floor(Number(bettingMoney.value) * odds);
+  const money =
+    Number(localStorage.getItem(LOCAL_STORAGE_MONEY)) + variableMoney;
   localStorage.setItem(LOCAL_STORAGE_MONEY, money);
-  // console.log
+  // output
   if (odds < 0) {
-    console.log(`${variableAmount} x(${odds})`);
-    variableMoney.innerText = `(${variableAmount} x(${odds}))`;
+    console.log(`${variableMoney} x(${odds})`);
+    variableMoney.innerText = `(${variableMoney} x(${odds}))`;
   } else {
-    console.log(`+${variableAmount} x(${odds})`);
-    variableMoney.innerText = `(+${variableAmount} x(${odds}))`;
+    console.log(`+${variableMoney} x(${odds})`);
+    variableMoney.innerText = `(+${variableMoney} x(${odds}))`;
   }
   showMyMoney();
 }
 
-// function sleep(ms) {
-//     const wakeUpTime = Date.now() + ms;
-//     while(Date.now() < wakeUpTime) {}
-// }
+/* 시간 딜레이 함수 */
+function delay() {
+  return new Promise((resolve) => setTimeout(resolve, 400));
+}
 
 /* 'Play'버튼 */
 playButton.addEventListener("click", (event) => {
@@ -317,51 +353,66 @@ playButton.addEventListener("click", (event) => {
     stayButton.removeAttribute("disabled");
     resetButton.removeAttribute("disabled");
     bettingMoney.setAttribute("disabled", "true");
-    localStorage.setItem(BLACKJACK_BETTING_MONEY, bettingMoney.value); // 배팅금액 저장
+    gameRecordResetBtn.setAttribute("disabled", "true");
+    // 배팅금액 저장
+    localStorage.setItem(BLACKJACK_BETTING_MONEY, bettingMoney.value);
     variableMoney.innerText = "";
     // 동작
     initialBlackjack();
     isBurst(playerDescription, playerCard, playerSum);
     isBurst(dealerDescription, dealerCard, dealerSum);
     ifPlayerBlackjack();
-  } else {
-    alert("배팅 금액을 숫자로 입력해주세요.");
   }
 });
 
 /* 'Hit'버튼 */
 hitButton.addEventListener("click", (event) => {
   event.preventDefault();
-  stayButton.removeAttribute("disabled");
-  hit();
-  isBurst(playerDescription, playerCard, playerSum);
-  ifPlayerBlackjack();
-  ifPlayerBurst();
+  // 게임 도중
+  if (isPlaying) {
+    stayButton.removeAttribute("disabled");
+    hit();
+    isBurst(playerDescription, playerCard, playerSum);
+    ifPlayerBlackjack();
+    ifPlayerBurst();
+  } else {
+    // 게임 중이 아닐 때
+    alert("게임 중이 아닐 때에는 작동하지 않습니다.");
+  }
 });
 
 /* 'Stay'버튼 */
-stayButton.addEventListener("click", (event) => {
+stayButton.addEventListener("click", async (event) => {
   event.preventDefault();
-  stayButton.setAttribute("disabled", "true");
-  hitButton.setAttribute("disabled", "true");
-  stay();
-  isBurst(dealerDescription, dealerCard, dealerSum);
-  /* 결과 보여주기 win/lose */
-  const playerSumNum = Number(playerSum.innerText);
-  const dealerSumNum = Number(dealerSum.innerText);
-  if (playerSumNum > dealerSumNum || dealerSumNum > BLACKJACK_NUMBER) {
-    showWin();
-  } else if (playerSumNum === dealerSumNum) {
-    showDraw();
-  } else if (dealerSumNum > playerSumNum || dealerSumNum === BLACKJACK_NUMBER) {
-    showLose();
+  // 게임 도중
+  if (isPlaying) {
+    stayButton.setAttribute("disabled", "true");
+    hitButton.setAttribute("disabled", "true");
+    await stay();
+    isBurst(dealerDescription, dealerCard, dealerSum);
+    // 결과 보여주기 win/lose
+    const playerSumNum = Number(playerSum.innerText);
+    const dealerSumNum = Number(dealerSum.innerText);
+    if (playerSumNum > dealerSumNum || dealerSumNum > BLACKJACK_NUMBER) {
+      showWin();
+    } else if (playerSumNum === dealerSumNum) {
+      showDraw();
+    } else if (
+      dealerSumNum > playerSumNum ||
+      dealerSumNum === BLACKJACK_NUMBER
+    ) {
+      showLose();
+    }
+  } else {
+    // 게임 중이 아닐 때
+    alert("게임 중이 아닐 때에는 작동하지 않습니다.");
   }
 });
 
 /* 게임이 끝나지 않았을 때 reset 버튼 누를 시 */
 resetButton.addEventListener("click", () => {
   if (!resultText.innerText) {
-    // 패 전적 추가
+    // 전적(전+패) 추가
     setGameRecord(BLACKJACK_GAME_STORAGE);
     setGameRecord(BLACKJACK_LOSE_STORAGE);
     // 배팅액 잃음
@@ -372,11 +423,19 @@ resetButton.addEventListener("click", () => {
 /* 전적 초기화 버튼 */
 gameRecordResetBtn.addEventListener("click", () => {
   const ok = confirm("정말 모든 전적을 초기화 하시겠습니까?");
-  if (ok) {
-    localStorage.removeItem(BLACKJACK_GAME_STORAGE);
-    localStorage.removeItem(BLACKJACK_WIN_STORAGE);
-    localStorage.removeItem(BLACKJACK_DRAW_STORAGE);
-    localStorage.removeItem(BLACKJACK_LOSE_STORAGE);
+  // 게임 중이 아닐 때에만 동작
+  if (!isPlaying) {
+    if (ok) {
+      localStorage.removeItem(BLACKJACK_GAME_STORAGE);
+      localStorage.removeItem(BLACKJACK_WIN_STORAGE);
+      localStorage.removeItem(BLACKJACK_DRAW_STORAGE);
+      localStorage.removeItem(BLACKJACK_LOSE_STORAGE);
+      window.location.reload();
+    } else {
+      alert("전적 초기화를 취소하였습니다.");
+    }
+  } else {
+    // 게임 도중에는 비활성화
+    alert("게임 도중에는 전적 초기화를 할 수 없습니다.");
   }
-  window.location.reload();
 });

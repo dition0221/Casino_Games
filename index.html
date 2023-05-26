@@ -13,19 +13,36 @@
 
 <body>
     <header>
-        <h1 class="title">Welcome to Javascript Casino Game World !</h1>
+        <h1 class="title">Welcome to <span>Javascript</span> Casino Game World !</h1>
     </header>
     <main>
         <a href="black-jack.html">블랙잭 하러가기</a>
         <a href="slot-machine.html">슬롯머신 하러가기</a>
     </main>
     <footer>
-        <div class="our-introduce">
-            <span>본 페이지는 공부연습용 입니다.</span>
-            <p>@dition0221 @LeeMinGwi</p>
+        <div class="footer__row">
+            <audio class="bgm" src="./audio/로스트아크_볼라르섬_BGM.mp3" preload="metadata" controls loop></audio>
+        </div>
+        <div class="footer__row">
+            <div class="go-home">
+                <a href="index.html">홈으로 가기</a>
+            </div>
+            <div class="our-introduce">
+                <span>본 페이지는 공부연습용 입니다.</span>
+                <p>@dition0221 @LeeMinGwi</p>
+            </div>
         </div>
     </footer>
-    <script src="js/bgm.js"></script>
+    <script src="js/bgm-volume.js"></script>
+    <script>
+        const showMeTheMoney = document.querySelector(".title");
+        showMeTheMoney.addEventListener("dblclick", () => {
+            const LOCAL_STORAGE_MONEY = "money";
+            if (Number(localStorage.getItem(LOCAL_STORAGE_MONEY)) <= 0) {
+                localStorage.setItem(LOCAL_STORAGE_MONEY, 10000000);
+            }
+        });
+    </script>
 </body>
 
 </html>

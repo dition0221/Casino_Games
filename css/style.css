@@ -3,7 +3,11 @@
 /* screen */
 @import "screen/index.css";
 
+/* Components*/
+@import "components/footer.css";
+@import "components/header.css";
+
 body {
-    background-color: olive;
-    padding: 0 25px;
+  background-color: olive;
+  padding: 0 25px;
 }
